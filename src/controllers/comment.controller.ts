@@ -30,3 +30,43 @@ export const createComment = asyncHandler(
       .json({ message: "comment creation successful", comment: newComment });
   },
 );
+
+export const editComment = asyncHandler(async (req: Request, res: Response) => {
+  const editComment = commentSchemaZ.partial().parse(req.body);
+  const id = req.params.id;
+  const userId = (req as AuthRequest).user.id;
+  const comment = await commentService.getCommentById(id);
+  const validateData = commentSchemaZ.parse(comment);
+  if (validateData.userId.toString() !== userId.toString()) {
+    res.status(403).json({ message: "user not authorised" });
+    return;
+  }
+  if (!comment) {
+    res.status(404).json({ message: "comment could not be found" });
+    return;
+  }
+  const updatedComment = await commentService.updateComment(id, editComment);
+
+  if (!updatedComment) {
+    res.status(500).json({ message: "could not update comment" });
+    return;
+  }
+  res
+    .status(200)
+    .json({ message: "comment updated successful", comment: updatedComment });
+});
+
+export const deleteComment = asyncHandler(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const userId = (req as AuthRequest).user.id;
+    const comment = await commentService.getCommentById(id);
+    const validateData = commentSchemaZ.parse(comment);
+    if (validateData.userId.toString() !== userId.toString()) {
+      res.status(403).json({ message: "user not authorised" });
+      return;
+    }
+    await commentService.removeComment(id);
+    res.status(204).end();
+  },
+);

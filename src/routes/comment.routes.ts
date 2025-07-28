@@ -1,5 +1,9 @@
 import express, { Request, Response } from "express";
-import { createComment } from "../controllers/comment.controller";
+import {
+  createComment,
+  editComment,
+  deleteComment,
+} from "../controllers/comment.controller";
 import { protect } from "../middlewares/authMiddleware";
 
 const commentRoutes = express.Router();
@@ -13,19 +17,9 @@ commentRoutes.get("/:id/replies", (req: Request, res: Response) => {
 // POST /comments - createComment
 commentRoutes.post("/", protect, createComment);
 
-// PATCH /comments/:id - editComment (only by owner)
-commentRoutes.patch("/:id", (req: Request, res: Response) => {
-  const commentId = req.params.id;
-  res.send(
-    `editComment is working for comment ID ${commentId} (only by owner)`,
-  );
-});
+// put /comments/:id - editComment (only by owner)
+commentRoutes.put("/:id", protect, editComment);
 // DELETE /comments/:id - deleteComment (owner or admin)
-commentRoutes.delete("/:id", (req: Request, res: Response) => {
-  const commentId = req.params.id;
-  res.send(
-    `deleteComment is working for comment ID ${commentId} (owner or admin)`,
-  );
-});
+commentRoutes.delete("/:id", protect, deleteComment);
 
 export default commentRoutes;
