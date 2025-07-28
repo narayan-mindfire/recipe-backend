@@ -11,6 +11,7 @@ const commentSchema = new Schema<Comment>(
       default: null,
     },
     comment: { type: String, required: true },
+    hasChildren: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

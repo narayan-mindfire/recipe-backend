@@ -1,4 +1,6 @@
 import express, { Request, Response } from "express";
+import { createComment } from "../controllers/comment.controller";
+import { protect } from "../middlewares/authMiddleware";
 
 const commentRoutes = express.Router();
 
@@ -9,9 +11,7 @@ commentRoutes.get("/:id/replies", (req: Request, res: Response) => {
 });
 
 // POST /comments - createComment
-commentRoutes.post("/", (req: Request, res: Response) => {
-  res.send("createComment is working");
-});
+commentRoutes.post("/", protect, createComment);
 
 // PATCH /comments/:id - editComment (only by owner)
 commentRoutes.patch("/:id", (req: Request, res: Response) => {
