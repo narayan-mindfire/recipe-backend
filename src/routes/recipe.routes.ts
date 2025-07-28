@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import {
   createRecipe,
   deleteRecipe,
@@ -19,16 +19,9 @@ recipeRoutes.get("/:id", getRecipeById);
 //   res.send(`getting all parent comments for recipe with id : ${id}`);
 // });
 
-recipeRoutes.post("/", createRecipe);
+recipeRoutes.post("/", protect, createRecipe);
 
-recipeRoutes.put("/:id", editRecipe);
-
-recipeRoutes.patch("/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
-  res.send(
-    `update avgRating & ratingCount is working for recipe ID ${id} (internal use only)`,
-  );
-});
+recipeRoutes.put("/:id", protect, editRecipe);
 
 recipeRoutes.delete("/:id", protect, deleteRecipe);
 

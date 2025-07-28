@@ -67,11 +67,17 @@ export const getRecipes = async (
 export const getRecipeById = asyncHandler(
   async (req: Request, res: Response) => {
     const recipe = await recipeService.getRecipeById(req.params.id);
+    if (!recipe) {
+      res.status(404).json({ message: "recipe not found" });
+      return;
+    }
     const validateData = recipeSchemaZ.parse(recipe);
     if (validateData) {
       res.status(200).json({ recipe });
+      return;
     } else {
       res.status(404).json({ message: "didn't find the recipe" });
+      return;
     }
   },
 );
@@ -80,7 +86,7 @@ export const createRecipe = asyncHandler(
   async (req: Request, res: Response) => {
     const payload = {
       ...req.body,
-      userId: new mongoose.Types.ObjectId(req.body.userId as string),
+      userId: new mongoose.Types.ObjectId((req as AuthRequest).user.id),
     };
     const validatedData = recipeSchemaZ.parse(payload);
     const recipe = await recipeService.createNewRecipe(validatedData);
