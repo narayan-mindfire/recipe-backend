@@ -1,36 +1,26 @@
 import express, { Request, Response } from "express";
+import {
+  createRecipe,
+  editRecipe,
+  getRecipeById,
+  getRecipes,
+} from "../controllers/recipe.controller";
 
 const recipeRoutes = express.Router();
 
-// GET /recipes - getRecipes (with optional search, sort, filter)
-recipeRoutes.get("/", (_req: Request, res: Response) => {
-  res.send("getRecipes with search/sort/filter is working");
-});
+recipeRoutes.get("/", getRecipes);
 
-// GET /recipes/:id - getSingleRecipe
-recipeRoutes.get("/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
-  res.send(`getSingleRecipe is working for recipe ID ${id}`);
-});
+recipeRoutes.get("/:id", getRecipeById);
 
-recipeRoutes.get("/:id/comments", (req: Request, res: Response) => {
-  const id = req.params.id;
-  res.send(`getting all parent comments for recipe with id : ${id}`);
-});
-// POST /recipes - createRecipe (private)
-recipeRoutes.post("/", (req: Request, res: Response) => {
-  res.send("createRecipe is working (private route)");
-});
+// recipeRoutes.get("/:id/comments", (req: Request, res: Response) => {
+//   const id = req.params.id;
+//   res.send(`getting all parent comments for recipe with id : ${id}`);
+// });
 
-// PUT /recipes/:id - update entire recipe (private)
-recipeRoutes.put("/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
-  res.send(
-    `update entire recipe is working for recipe ID ${id} (private route)`,
-  );
-});
+recipeRoutes.post("/", createRecipe);
 
-// PATCH /recipes/:id - update avgRating, ratingCount (internal only)
+recipeRoutes.put("/:id", editRecipe);
+
 recipeRoutes.patch("/:id", (req: Request, res: Response) => {
   const id = req.params.id;
   res.send(
@@ -38,7 +28,6 @@ recipeRoutes.patch("/:id", (req: Request, res: Response) => {
   );
 });
 
-// DELETE /recipes/:id - deleteRecipe (private)
 recipeRoutes.delete("/:id", (req: Request, res: Response) => {
   const id = req.params.id;
   res.send(`deleteRecipe is working for recipe ID ${id} (private route)`);

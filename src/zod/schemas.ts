@@ -12,8 +12,8 @@ export const recipeSchemaZ = z.object({
   recipeImage: z.string().optional(),
   averageRating: z.number().optional(),
   numberOfRatings: z.number().int().optional(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 export const userSchemaZ = z.object({
