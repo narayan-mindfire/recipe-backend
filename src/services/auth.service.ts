@@ -8,7 +8,7 @@ import {
 } from "../utils/jwt";
 
 export class AuthService {
-  async checkUserPresence(userId: string) {
+  private async checkUserPresence(userId: string) {
     const user = await authRepository.findById(userId);
     if (!user) throw new Error("User not found");
     return user;

@@ -17,4 +17,6 @@ const recipeSchema = new Schema<Recipe>(
   { timestamps: true },
 );
 
+recipeSchema.index({ userId: 1, title: 1, steps: 1 }, { unique: true });
+
 export const RecipeModel = model<Recipe>("Recipe", recipeSchema);
