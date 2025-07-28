@@ -25,7 +25,7 @@ app.use(
   cors({
     origin: [process.env.LOCAL_CLIENT_URL!],
     credentials: true,
-  })
+  }),
 );
 
 app.use(limiter);
