@@ -20,6 +20,16 @@ class CommentService {
     await commentRepository.delete(id);
     return;
   }
+
+  async getRecipeComments(recipeId: string) {
+    const comments = await commentRepository.findRecipeComments(recipeId);
+    return comments;
+  }
+
+  async getChildrenComments(commentId: string) {
+    const comments = await commentRepository.findChildComments(commentId);
+    return comments;
+  }
 }
 
 export const commentService = new CommentService();
