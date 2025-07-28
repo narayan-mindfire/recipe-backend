@@ -11,6 +11,7 @@ const commentSchema = new Schema<Comment>(
       default: null,
     },
     comment: { type: String, required: true },
+    hasChildren: { type: Boolean, default: false },
   },
   { timestamps: true },
 );
@@ -18,6 +19,11 @@ const commentSchema = new Schema<Comment>(
 commentSchema.index(
   { userId: 1, recipeId: 1 },
   { unique: true, partialFilterExpression: { parentCommentId: null } },
+);
+
+commentSchema.index(
+  { parentCommentId: 1, userId: 1, comment: 1 },
+  { unique: true },
 );
 
 export const CommentModel = model<Comment>("Comment", commentSchema);
