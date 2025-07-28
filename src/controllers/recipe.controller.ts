@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import { recipeService } from "../services/recipe.service";
 import { recipeSchemaZ } from "../zod/schemas";
 import mongoose from "mongoose";
-import { RecipeFilters } from "../types/types";
+import { AuthRequest, RecipeFilters } from "../types/types";
 
 export interface RecipeQuery {
   ingredients?: string;
@@ -101,3 +101,27 @@ export const editRecipe = asyncHandler(async (req: Request, res: Response) => {
   }
   res.status(200).json({ message: "Recipe updated", recipe: updatedRecipe });
 });
+
+export const deleteRecipe = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = (req as AuthRequest).user.id;
+
+    const recipe = await recipeService.getRecipeById(req.params.id);
+
+    if (!recipe) {
+      res.status(404).json({ message: "Recipe not found" });
+      return;
+    }
+
+    const validateData = recipeSchemaZ.parse(recipe);
+
+    if (userId.toString() !== validateData.userId.toString()) {
+      res
+        .status(403)
+        .json({ message: "Current user cannot delete this recipe" });
+      return;
+    }
+    await recipeService.removeRecipe(req.params.id);
+    res.status(204).end();
+  },
+);

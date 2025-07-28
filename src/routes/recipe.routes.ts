@@ -1,10 +1,12 @@
 import express, { Request, Response } from "express";
 import {
   createRecipe,
+  deleteRecipe,
   editRecipe,
   getRecipeById,
   getRecipes,
 } from "../controllers/recipe.controller";
+import { protect } from "../middlewares/authMiddleware";
 
 const recipeRoutes = express.Router();
 
@@ -28,9 +30,6 @@ recipeRoutes.patch("/:id", (req: Request, res: Response) => {
   );
 });
 
-recipeRoutes.delete("/:id", (req: Request, res: Response) => {
-  const id = req.params.id;
-  res.send(`deleteRecipe is working for recipe ID ${id} (private route)`);
-});
+recipeRoutes.delete("/:id", protect, deleteRecipe);
 
 export default recipeRoutes;

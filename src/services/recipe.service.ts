@@ -33,6 +33,10 @@ class RecipeService {
   async updateRecipe(id: string, newRecipe: Partial<Recipe>) {
     return await recipeRepository.editRecipe(id, newRecipe);
   }
+
+  async removeRecipe(id: string) {
+    await recipeRepository.delete(id);
+  }
 }
 
 export const recipeService = new RecipeService();
