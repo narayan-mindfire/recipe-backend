@@ -156,7 +156,7 @@ describe("Recipe Controller", () => {
   it("should handle validation error and respond with 400", async () => {
     const req = {
       body: {
-        title: "", // invalid
+        title: "",
         ingredients: [],
         steps: [],
       },
