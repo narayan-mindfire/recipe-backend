@@ -38,7 +38,7 @@ export default [
           caughtErrorsIgnorePattern: "^_",
         },
       ],
-      "n/no-missing-import": "off", // if using 'eslint-plugin-n'
+      "n/no-missing-import": "off",
     },
   },
 ];

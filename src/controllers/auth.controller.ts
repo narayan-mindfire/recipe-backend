@@ -1,9 +1,7 @@
 import { Request, Response } from "express";
-import { AuthService } from "../services/auth.service";
+import { authService } from "../services/auth.service";
 import { userSchemaZ } from "../zod/schemas";
 import { AuthRequest } from "../types/types";
-
-const authService = new AuthService();
 
 export const registerUser = async (req: Request, res: Response) => {
   try {

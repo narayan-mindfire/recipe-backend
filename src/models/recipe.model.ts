@@ -11,10 +11,12 @@ const recipeSchema = new Schema<Recipe>(
     ingredients: [String],
     steps: [String],
     recipeImage: String,
-    averageRating: Number,
-    numberOfRatings: Number,
+    averageRating: { type: Number, default: 0 },
+    numberOfRatings: { type: Number, default: 0 },
   },
   { timestamps: true },
 );
+
+recipeSchema.index({ userId: 1, title: 1, steps: 1 }, { unique: true });
 
 export const RecipeModel = model<Recipe>("Recipe", recipeSchema);
