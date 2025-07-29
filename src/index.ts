@@ -3,8 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db";
 import router from "./routes";
-// import swaggerUi from "swagger-ui-express";
-// import { swaggerSpec } from "./swagger/swagger";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./swagger/swagger";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
@@ -39,15 +39,15 @@ app.use("/api/v1", router);
 
 app.use(errorHandler);
 
-// app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.get("/swagger.json", (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  //   res.send(swaggerSpec);
+  res.send(swaggerSpec);
 });
 
 app.listen(port, () => {
-  //   console.log(`Swagger docs at http://localhost:${port}/api-docs`);
+  // console.log(`Swagger docs at http://localhost:${port}/api-docs`);
 });
 
 app.use("/", (req: Request, res: Response) => {
