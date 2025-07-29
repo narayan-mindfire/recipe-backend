@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db";
@@ -25,7 +25,7 @@ app.use(
   cors({
     origin: [process.env.LOCAL_CLIENT_URL!],
     credentials: true,
-  })
+  }),
 );
 
 app.use(limiter);

@@ -1,6 +1,5 @@
 import request from "supertest";
 import app from "../.."; // Adjust this path to your actual Express app entry point
-import mongoose from "mongoose";
 import { UserModel } from "../../models/user.model";
 
 let accessToken: string;
@@ -88,8 +87,8 @@ describe("Auth Routes", () => {
 
     expect(
       (res.headers["set-cookie"] as unknown as string[]).some((cookie) =>
-        cookie.startsWith("accessToken")
-      )
+        cookie.startsWith("accessToken"),
+      ),
     ).toBe(true);
   });
 
@@ -100,7 +99,7 @@ describe("Auth Routes", () => {
   });
 
   it("should delete the user", async () => {
-    const res = await request(app)
+    const _res = await request(app)
       .delete(`${baseUrl}/auth/me`)
       .set("Cookie", [`accessToken=${accessToken}`])
       .expect(204);
