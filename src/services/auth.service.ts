@@ -7,7 +7,7 @@ import {
   verifyRefreshToken,
 } from "../utils/jwt";
 
-export class AuthService {
+class AuthService {
   private async checkUserPresence(userId: string) {
     const user = await authRepository.findById(userId);
     if (!user) throw new Error("User not found");
@@ -70,3 +70,5 @@ export class AuthService {
     return rest;
   }
 }
+
+export const authService = new AuthService();

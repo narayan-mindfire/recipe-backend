@@ -11,8 +11,8 @@ const recipeSchema = new Schema<Recipe>(
     ingredients: [String],
     steps: [String],
     recipeImage: String,
-    averageRating: Number,
-    numberOfRatings: Number,
+    averageRating: { type: Number, default: 0 },
+    numberOfRatings: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

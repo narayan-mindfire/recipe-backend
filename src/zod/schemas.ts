@@ -41,8 +41,8 @@ export const ratingSchemaZ = z.object({
   userId: z.instanceof(Types.ObjectId),
   recipeId: z.instanceof(Types.ObjectId),
   rating: z.number().int().min(1).max(5),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 export type Rating = z.infer<typeof ratingSchemaZ>;

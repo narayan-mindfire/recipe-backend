@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import mongoose from "mongoose";
 
 /**
  *
@@ -18,7 +19,17 @@ const errorHandler = (
   res: Response,
   _next: NextFunction,
 ): void => {
-  const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
+  let statusCode = res.statusCode !== 200 ? res.statusCode : 500;
+
+  if (err.message.split(" ")[0] === "E11000") {
+    statusCode = 400;
+    err.message = `cannot have duplicates`;
+  }
+
+  if (err instanceof mongoose.Error.CastError) {
+    statusCode = 400;
+    err.message = `Resource not found with id: ${err.value}`;
+  }
 
   res.status(statusCode).json({
     message: err.message,
