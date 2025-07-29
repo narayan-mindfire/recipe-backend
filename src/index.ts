@@ -53,3 +53,5 @@ app.listen(port, () => {
 app.use("/", (req: Request, res: Response) => {
   res.send("route working");
 });
+
+export default app;
