@@ -14,14 +14,18 @@ const authRouter = express.Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication and user profile routes
+ */
+
+/**
+ * @swagger
  * /auth/register:
  *   post:
- *     summary: Register a new user (doctor or patient)
+ *     summary: Register a new user
  *     tags: [Auth]
- *     description: |
- *       Creates a user and conditionally creates a doctor or patient profile based on `user_type`.
- *       - For `doctor`, `specialization` is required.
- *       - For `patient`, `gender` and `date_of_birth` are required.
+ *     description: Registers a new user with required fields. Password is securely hashed before saving.
  *     requestBody:
  *       required: true
  *       content:
@@ -29,74 +33,41 @@ const authRouter = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - first_name
- *               - last_name
+ *               - fname
+ *               - lname
  *               - email
  *               - password
- *               - user_type
  *             properties:
- *               first_name:
+ *               fname:
  *                 type: string
  *                 example: John
- *               last_name:
+ *               lname:
  *                 type: string
  *                 example: Doe
  *               email:
  *                 type: string
- *                 example: john.doe@example.com
+ *                 example: john@example.com
  *               password:
  *                 type: string
- *                 example: Password123
- *               phone_number:
- *                 type: string
- *                 example: "9876543210"
- *               user_type:
- *                 type: string
- *                 enum: [doctor, patient]
- *                 example: doctor
- *               specialization:
- *                 type: string
- *                 example: cardiologist
+ *                 example: MyPassword123
  *               bio:
  *                 type: string
- *                 example: Expert in heart surgeries
- *               gender:
+ *               profileImage:
  *                 type: string
- *                 example: male
- *               date_of_birth:
- *                 type: string
- *                 format: date
- *                 example: 1990-01-01
  *     responses:
  *       201:
- *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: User created successfully
- *                 user_id:
- *                   type: string
- *                   example: 60c72b2f9b1e8c001f0e4b8a
- *                 user_type:
- *                   type: string
- *                   example: doctor
- *                 token:
- *                   type: string
+ *         description: User successfully registered
  *       400:
- *         description: Missing required fields or email already in use
+ *         description: Email already exists or validation error
  */
-authRouter.post("/register", registerUser);
 
 /**
  * @swagger
  * /auth/login:
  *   post:
- *     summary: Logs in a user
+ *     summary: Log in a user
  *     tags: [Auth]
+ *     description: Authenticates a user and returns JWT tokens in HTTP-only cookies
  *     requestBody:
  *       required: true
  *       content:
@@ -109,66 +80,115 @@ authRouter.post("/register", registerUser);
  *             properties:
  *               email:
  *                 type: string
+ *                 example: john@example.com
  *               password:
  *                 type: string
+ *                 example: MyPassword123
  *     responses:
  *       200:
- *         description: Successful login
- *       401:
+ *         description: Successfully authenticated
+ *       400:
  *         description: Invalid credentials
  */
-authRouter.post("/login", loginUser);
 
 /**
  * @swagger
  * /auth/refresh-token:
  *   post:
- *     summary: Refresh the access token using a valid refresh token cookie
+ *     summary: Refresh access token using refresh token cookie
  *     tags: [Auth]
- *     description: |
- *       This endpoint generates a new access token by validating the refresh token stored in the user's cookie.
- *       The refresh token must be present in the HTTP-only cookie named `refreshToken`.
  *     responses:
  *       200:
- *         description: New access token generated
+ *         description: New access token issued
  *       401:
  *         description: No refresh token provided
- *       403:
+ *       400:
  *         description: Invalid or expired refresh token
  */
-authRouter.post("/refresh-token", refreshToken);
 
 /**
  * @swagger
  * /auth/logout:
  *   post:
- *     summary: Logs out a user by clearing the authentication cookies
+ *     summary: Log out the current user
  *     tags: [Auth]
+ *     description: Clears refresh and access tokens from cookies
  *     responses:
  *       200:
- *         description: User logged out successfully
- *       401:
- *         description: User not authenticated
- *     description: |
- *       This endpoint clears the authentication cookies (`accessToken` and `refreshToken`) to log out the user.
- *       It should be called when the user wants to log out of the application.
- *       The cookies are set to expire immediately, effectively logging the user out.
+ *         description: User logged out
  */
-authRouter.post("/logout", logoutUser);
 
 /**
  * @swagger
  * /auth/me:
  *   get:
- *     summary: Get the authenticated user's profile
+ *     summary: Get current user profile
  *     tags: [Auth]
- *     description: |
- *       This endpoint retrieves the profile of the currently authenticated user.
- *       It requires the user to be authenticated via the `protect` middleware.
+ *     description: Returns the authenticated user's profile (requires accessToken cookie)
+ *     security:
+ *       - cookieAuth: []
  *     responses:
  *       200:
- *         description: Successfully retrieved user profile
+ *         description: User profile retrieved
+ *       401:
+ *         description: Not authorized
  */
+
+/**
+ * @swagger
+ * /auth/me:
+ *   delete:
+ *     summary: Delete the current user account
+ *     tags: [Auth]
+ *     description: Deletes the user account associated with the current session
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       204:
+ *         description: User deleted
+ *       401:
+ *         description: Unauthorized
+ */
+
+/**
+ * @swagger
+ * /auth/me:
+ *   put:
+ *     summary: Update the current user's profile
+ *     tags: [Auth]
+ *     description: Updates user fields (except password)
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               fname:
+ *                 type: string
+ *               lname:
+ *                 type: string
+ *               bio:
+ *                 type: string
+ *               profileImage:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User updated
+ *       400:
+ *         description: Validation or update failure
+ */
+
+authRouter.post("/register", registerUser);
+
+authRouter.post("/login", loginUser);
+
+authRouter.post("/refresh-token", refreshToken);
+
+authRouter.post("/logout", logoutUser);
+
 authRouter.get("/me", protect, getMe);
 
 authRouter.delete("/me", protect, deleteMe);
