@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for models/recipe.model.ts</title>
+    <title>Code coverage report for models/rating.model.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">models</a> recipe.model.ts</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">models</a> rating.model.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -78,17 +78,10 @@
 <a name='L13'></a><a href='#L13'>13</a>
 <a name='L14'></a><a href='#L14'>14</a>
 <a name='L15'></a><a href='#L15'>15</a>
-<a name='L16'></a><a href='#L16'>16</a>
-<a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a>
-<a name='L20'></a><a href='#L20'>20</a>
-<a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
+<a name='L16'></a><a href='#L16'>16</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -97,38 +90,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Schema, model } from "mongoose";
-import { Recipe } from "../zod/schemas";
+import { Rating } from "../zod/schemas";
 &nbsp;
-const recipeSchema = new Schema&lt;Recipe&gt;(
+const ratingSchema = new Schema&lt;Rating&gt;(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-    title: { type: String, required: true },
-    description: String,
-    preparationTime: Number,
-    difficulty: { type: String, enum: ["easy", "medium", "hard"] },
-    ingredients: [String],
-    steps: [String],
-    recipeImage: String,
-    averageRating: { type: Number, default: 0 },
-    numberOfRatings: { type: Number, default: 0 },
+    recipeId: { type: Schema.Types.ObjectId, ref: "Recipe", required: true },
+    rating: { type: Number, min: 1, max: 5, required: true },
   },
   { timestamps: true },
 );
 &nbsp;
-recipeSchema.index({ userId: 1, title: 1, steps: 1 }, { unique: true });
+ratingSchema.index({ userId: 1, recipeId: 1 }, { unique: true });
 &nbsp;
-export const RecipeModel = model&lt;Recipe&gt;("Recipe", recipeSchema);
+export const RatingModel = model&lt;Rating&gt;("Rating", ratingSchema);
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

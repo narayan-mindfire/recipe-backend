@@ -25,7 +25,7 @@ app.use(
   cors({
     origin: [process.env.LOCAL_CLIENT_URL!],
     credentials: true,
-  }),
+  })
 );
 
 app.use(limiter);
@@ -48,10 +48,6 @@ app.get("/swagger.json", (req, res) => {
 
 app.listen(port, () => {
   // console.log(`Swagger docs at http://localhost:${port}/api-docs`);
-});
-
-app.use("/", (req: Request, res: Response) => {
-  res.send("route working");
 });
 
 export default app;

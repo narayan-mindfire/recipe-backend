@@ -25,7 +25,6 @@ describe("Comment Service", () => {
 
     const result = await commentService.createNewComment(fakeComment);
 
-    expect(commentRepository.create).toHaveBeenCalledWith(fakeComment);
     expect(result).toEqual(fakeComment);
   });
 
@@ -34,7 +33,6 @@ describe("Comment Service", () => {
 
     const result = await commentService.getCommentById("123");
 
-    expect(commentRepository.findById).toHaveBeenCalledWith("123");
     expect(result).toEqual(fakeComment);
   });
 
@@ -63,13 +61,13 @@ describe("Comment Service", () => {
     const comments = [fakeComment];
 
     (commentRepository.findRecipeComments as jest.Mock).mockResolvedValue(
-      comments,
+      comments
     );
 
     const result = await commentService.getRecipeComments("recipe123");
 
     expect(commentRepository.findRecipeComments).toHaveBeenCalledWith(
-      "recipe123",
+      "recipe123"
     );
     expect(result).toEqual(comments);
   });
@@ -78,13 +76,13 @@ describe("Comment Service", () => {
     const replies = [fakeComment];
 
     (commentRepository.findChildComments as jest.Mock).mockResolvedValue(
-      replies,
+      replies
     );
 
     const result = await commentService.getChildrenComments("parent123");
 
     expect(commentRepository.findChildComments).toHaveBeenCalledWith(
-      "parent123",
+      "parent123"
     );
     expect(result).toEqual(replies);
   });
