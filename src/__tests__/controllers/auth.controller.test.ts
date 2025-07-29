@@ -46,7 +46,7 @@ describe("Auth Controller - registerUser", () => {
     const res = httpMocks.createResponse();
 
     (authService.register as jest.Mock).mockRejectedValue(
-      new Error("Invalid input")
+      new Error("Invalid input"),
     );
 
     await registerUser(req, res);
