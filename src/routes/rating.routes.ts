@@ -1,22 +1,22 @@
-import express, { Request, Response } from "express";
-
+import express from "express";
+import {
+  createRating,
+  editRating,
+  deleteRating,
+  getMyRating,
+} from "../controllers/rating.controller";
+import { protect } from "../middlewares/authMiddleware";
 const ratingRoutes = express.Router();
 
+ratingRoutes.get("/:id", protect, getMyRating);
+
 // POST /ratings - createRating
-ratingRoutes.post("/", (req: Request, res: Response) => {
-  res.send("createRating is working");
-});
+ratingRoutes.post("/", protect, createRating);
 
 // PATCH /ratings/:id - updateRating
-ratingRoutes.patch("/:id", (req: Request, res: Response) => {
-  const ratingId = req.params.id;
-  res.send(`updateRating is working for rating ID ${ratingId}`);
-});
+ratingRoutes.put("/:id", protect, editRating);
 
 // DELETE /ratings/:id - deleteRating
-ratingRoutes.delete("/:id", (req: Request, res: Response) => {
-  const ratingId = req.params.id;
-  res.send(`deleteRating is working for rating ID ${ratingId}`);
-});
+ratingRoutes.delete("/:id", protect, deleteRating);
 
 export default ratingRoutes;

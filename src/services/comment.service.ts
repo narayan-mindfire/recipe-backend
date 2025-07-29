@@ -12,7 +12,7 @@ class CommentService {
   }
 
   async updateComment(id: string, data: Partial<Comment>) {
-    const updatedComment = commentRepository.update(id, data);
+    const updatedComment = await commentRepository.update(id, data);
     return updatedComment;
   }
 
