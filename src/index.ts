@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db";
@@ -50,6 +50,4 @@ app.listen(port, () => {
   // console.log(`Swagger docs at http://localhost:${port}/api-docs`);
 });
 
-app.use("/", (req: Request, res: Response) => {
-  res.send("route working");
-});
+export default app;
