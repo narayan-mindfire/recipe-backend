@@ -131,3 +131,11 @@ export const deleteRecipe = asyncHandler(
     res.status(204).end();
   },
 );
+
+export const getMyRecipes = asyncHandler(
+  async (req: Request, res: Response) => {
+    const userId = (req as AuthRequest).user.id;
+    const myRecipies = await recipeService.getMyRecipes(userId);
+    res.status(200).json({ myRecipies });
+  },
+);

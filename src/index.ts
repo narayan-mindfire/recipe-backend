@@ -23,7 +23,11 @@ const app: Express = express();
 
 app.use(
   cors({
-    origin: [process.env.LOCAL_CLIENT_URL!],
+    origin: [
+      process.env.LOCAL_CLIENT_URL!,
+      process.env.REACT_CLIENT_URL!,
+      "http://localhost:3000",
+    ],
     credentials: true,
   }),
 );

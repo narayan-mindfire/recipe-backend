@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { recipeRepository } from "../repositories/recipe.repository";
 import { RecipeFilters } from "../types/types";
 import { Recipe } from "../zod/schemas";
@@ -36,6 +37,12 @@ class RecipeService {
 
   async removeRecipe(id: string) {
     await recipeRepository.delete(id);
+  }
+
+  async getMyRecipes(userId: string) {
+    const objectId = new mongoose.Types.ObjectId(userId);
+    const recipes = await recipeRepository.findAll({ userId: objectId });
+    return recipes;
   }
 }
 

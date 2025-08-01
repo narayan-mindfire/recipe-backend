@@ -5,6 +5,7 @@ import {
   editRecipe,
   getRecipeById,
   getRecipes,
+  getMyRecipes,
 } from "../controllers/recipe.controller";
 import { protect } from "../middlewares/authMiddleware";
 
@@ -65,6 +66,8 @@ const recipeRoutes = express.Router();
  *         description: List of filtered recipes
  */
 recipeRoutes.get("/", getRecipes);
+
+recipeRoutes.get("/me", protect, getMyRecipes);
 
 /**
  * @swagger
