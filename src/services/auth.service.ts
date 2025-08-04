@@ -6,6 +6,8 @@ import {
   generateRefreshToken,
   verifyRefreshToken,
 } from "../utils/jwt";
+import path from "path";
+import fs from "fs";
 
 class AuthService {
   private async checkUserPresence(userId: string) {
@@ -56,7 +58,19 @@ class AuthService {
     return rest;
   }
   async deleteMe(userId: string) {
-    await this.checkUserPresence(userId);
+    const user = await this.checkUserPresence(userId);
+    if (user.profileImage && typeof user.profileImage === "string") {
+      const imagePath = path.join(
+        __dirname,
+        "..",
+        "..",
+        "uploads",
+        user.profileImage,
+      );
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
     await authRepository.deleteMe(userId);
   }
 

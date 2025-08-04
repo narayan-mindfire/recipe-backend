@@ -5,20 +5,23 @@ import { AuthRequest } from "../types/types";
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
-    const { user, accessToken, refreshToken } = await authService.register(
-      req.body,
-    );
+    const body = req.body;
+    const imagePath = req.file ? `${req.file.filename}` : undefined;
+
+    const { user, accessToken, refreshToken } = await authService.register({
+      ...body,
+      profileImage: imagePath,
+    });
+
     res
       .status(201)
       .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
       .cookie("accessToken", accessToken, { httpOnly: true, secure: true })
       .json({ user, accessToken });
   } catch (error: unknown) {
-    if (error instanceof Error) {
-      res.status(400).json({ message: error.message });
-    } else {
-      res.status(400).json({ message: "Something went wrong" });
-    }
+    res.status(400).json({
+      message: error instanceof Error ? error.message : "Something went wrong",
+    });
   }
 };
 
@@ -99,6 +102,10 @@ export const editMe = async (req: Request, res: Response) => {
     const updateUserSchema = userSchemaZ.partial().omit({ password: true });
 
     const validatedData = updateUserSchema.parse(req.body);
+
+    if (req.file?.filename) {
+      validatedData.profileImage = req.file.filename;
+    }
 
     const updatedUser = await authService.editMe(
       (req as AuthRequest).user.id,

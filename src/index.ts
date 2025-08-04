@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import errorHandler from "./middlewares/errorHandler";
+import path from "path";
 
 const port = process.env.PORT;
 
@@ -40,6 +41,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/api/v1", router);
+
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use(errorHandler);
 

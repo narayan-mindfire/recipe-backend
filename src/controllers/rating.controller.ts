@@ -14,7 +14,7 @@ export const getMyRating = asyncHandler(async (req: Request, res: Response) => {
     res.status(404).json({ message: "could not find rating" });
     return;
   }
-  res.status(404).json({ message: "rating found", myRating });
+  res.status(200).json({ message: "rating found", myRating });
 });
 
 export const createRating = asyncHandler(

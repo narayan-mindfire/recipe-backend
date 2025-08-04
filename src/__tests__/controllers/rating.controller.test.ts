@@ -30,7 +30,7 @@ describe("Rating Controller", () => {
     const next = mock.fn();
     await ratingController.getMyRating(req, res, next);
 
-    expect(res.status).toHaveBeenCalledWith(404); // should be 200 if message is "rating found"
+    expect(res.status).toHaveBeenCalledWith(200);
   });
 
   it("should create a new rating", async () => {

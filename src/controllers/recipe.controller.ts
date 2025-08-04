@@ -26,7 +26,7 @@ export const getRecipes = async (
     page = "1",
     limit = "10",
     sortBy = "updatedAt",
-    order = "1",
+    order = "-1",
   } = req.query;
 
   const parsedPage = parseInt(page, 10);
@@ -43,7 +43,7 @@ export const getRecipes = async (
   }
 
   if (parsedMinRating !== undefined) {
-    filters.rating = { $gte: parsedMinRating };
+    filters.averageRating = { $gte: parsedMinRating };
   }
 
   if (parsedMaxTime !== undefined) {
@@ -84,12 +84,33 @@ export const getRecipeById = asyncHandler(
 
 export const createRecipe = asyncHandler(
   async (req: Request, res: Response) => {
+    const userId = new mongoose.Types.ObjectId((req as AuthRequest).user.id);
+
+    // Handle ingredients & steps from multipart/form-data
+    let ingredients = req.body.ingredients;
+    let steps = req.body.steps;
+
+    if (!Array.isArray(ingredients)) ingredients = [ingredients];
+    if (!Array.isArray(steps)) steps = [steps];
+
+    const preparationTime = req.body.preparationTime
+      ? Number(req.body.preparationTime)
+      : undefined;
+
     const payload = {
-      ...req.body,
-      userId: new mongoose.Types.ObjectId((req as AuthRequest).user.id),
+      title: req.body.title,
+      description: req.body.description,
+      preparationTime,
+      difficulty: req.body.difficulty,
+      ingredients,
+      steps,
+      recipeImage: req.file?.filename || "", // Save filename, not full path
+      userId,
     };
+
     const validatedData = recipeSchemaZ.parse(payload);
     const recipe = await recipeService.createNewRecipe(validatedData);
+
     res.status(201).json({ recipe });
   },
 );
