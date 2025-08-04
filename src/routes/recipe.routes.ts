@@ -213,7 +213,7 @@ recipeRoutes.post("/", protect, upload.single("recipeImage"), createRecipe);
  *       404:
  *         description: Recipe not found
  */
-recipeRoutes.put("/:id", protect, editRecipe);
+recipeRoutes.put("/:id", upload.single("recipeImage"), protect, editRecipe);
 
 /**
  * @swagger

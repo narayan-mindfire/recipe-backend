@@ -138,7 +138,22 @@ export const createRecipe = asyncHandler(
  * @access  Private (authenticated)
  */
 export const editRecipe = asyncHandler(async (req: Request, res: Response) => {
-  const payload = req.body;
+  const payload = {
+    ...req.body,
+    preparationTime: req.body.preparationTime
+      ? parseInt(req.body.preparationTime)
+      : undefined,
+    ingredients: req.body.ingredients
+      ? req.body.ingredients.split(",").map((i: string) => i.trim())
+      : undefined,
+    steps: Array.isArray(req.body.steps)
+      ? req.body.steps
+      : req.body.steps
+        ? [req.body.steps]
+        : undefined,
+    recipeImage: req.file?.filename || undefined,
+  };
+
   const editRecipeSchema = recipeSchemaZ.partial();
   const result = editRecipeSchema.parse(payload);
 

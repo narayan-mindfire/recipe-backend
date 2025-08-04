@@ -16,7 +16,7 @@ export const getMyRating = asyncHandler(async (req: Request, res: Response) => {
     (req as AuthRequest).user.id,
   );
   if (!myRating) {
-    res.status(404).json({ message: "could not find rating" });
+    res.status(200).json({ message: "no ratings yet" });
     return;
   }
   res.status(200).json({ message: "rating found", myRating });
