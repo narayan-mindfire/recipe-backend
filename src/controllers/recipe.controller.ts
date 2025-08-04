@@ -15,9 +15,14 @@ export interface RecipeQuery {
   order?: "1" | "-1";
 }
 
+/**
+ * @desc    Get all recipes with optional filters and pagination
+ * @route   GET /api/recipes
+ * @access  Public
+ */
 export const getRecipes = async (
   req: Request<unknown, unknown, unknown, RecipeQuery>,
-  res: Response,
+  res: Response
 ) => {
   const {
     ingredients,
@@ -57,13 +62,17 @@ export const getRecipes = async (
     parsedLimit,
     skip,
     sortBy,
-    parsedOrder,
+    parsedOrder
   );
 
   res.json({ success: true, recipes });
 };
 
-//68871f7fd8b1dce3bdf4b202
+/**
+ * @desc    Get single recipe by ID
+ * @route   GET /api/recipes/:id
+ * @access  Public
+ */
 export const getRecipeById = asyncHandler(
   async (req: Request, res: Response) => {
     const recipe = await recipeService.getRecipeById(req.params.id);
@@ -79,18 +88,26 @@ export const getRecipeById = asyncHandler(
       res.status(404).json({ message: "didn't find the recipe" });
       return;
     }
-  },
+  }
 );
 
+/**
+ * @desc    Create a new recipe
+ * @route   POST /api/recipes
+ * @access  Private (authenticated)
+ */
 export const createRecipe = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = new mongoose.Types.ObjectId((req as AuthRequest).user.id);
 
-    // Handle ingredients & steps from multipart/form-data
     let ingredients = req.body.ingredients;
     let steps = req.body.steps;
 
-    if (!Array.isArray(ingredients)) ingredients = [ingredients];
+    if (typeof ingredients === "string") {
+      ingredients = ingredients.split(",").map((item) => item.trim());
+    } else if (!Array.isArray(ingredients)) {
+      ingredients = [ingredients];
+    }
     if (!Array.isArray(steps)) steps = [steps];
 
     const preparationTime = req.body.preparationTime
@@ -104,7 +121,7 @@ export const createRecipe = asyncHandler(
       difficulty: req.body.difficulty,
       ingredients,
       steps,
-      recipeImage: req.file?.filename || "", // Save filename, not full path
+      recipeImage: req.file?.filename || "",
       userId,
     };
 
@@ -112,9 +129,14 @@ export const createRecipe = asyncHandler(
     const recipe = await recipeService.createNewRecipe(validatedData);
 
     res.status(201).json({ recipe });
-  },
+  }
 );
 
+/**
+ * @desc    Edit a recipe by ID
+ * @route   PUT /api/recipes/:id
+ * @access  Private (authenticated)
+ */
 export const editRecipe = asyncHandler(async (req: Request, res: Response) => {
   const payload = req.body;
   const editRecipeSchema = recipeSchemaZ.partial();
@@ -129,6 +151,11 @@ export const editRecipe = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json({ message: "Recipe updated", recipe: updatedRecipe });
 });
 
+/**
+ * @desc    Delete a recipe by ID (only by the creator)
+ * @route   DELETE /api/recipes/:id
+ * @access  Private (authenticated)
+ */
 export const deleteRecipe = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = (req as AuthRequest).user.id;
@@ -150,13 +177,18 @@ export const deleteRecipe = asyncHandler(
     }
     await recipeService.removeRecipe(req.params.id);
     res.status(204).end();
-  },
+  }
 );
 
+/**
+ * @desc    Get all recipes created by the logged-in user
+ * @route   GET /api/recipes/my
+ * @access  Private (authenticated)
+ */
 export const getMyRecipes = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = (req as AuthRequest).user.id;
     const myRecipies = await recipeService.getMyRecipes(userId);
     res.status(200).json({ myRecipies });
-  },
+  }
 );
