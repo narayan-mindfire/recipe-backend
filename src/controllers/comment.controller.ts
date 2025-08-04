@@ -43,7 +43,7 @@ export const createComment = asyncHandler(
       message: "Comment creation successful",
       comment: newComment,
     });
-  }
+  },
 );
 
 /**
@@ -108,7 +108,7 @@ export const deleteComment = asyncHandler(
     await commentService.removeComment(id);
     res.status(204).end();
     return;
-  }
+  },
 );
 
 /**
@@ -122,7 +122,7 @@ export const getRecipeComments = asyncHandler(
     const comments = await commentService.getRecipeComments(recipeId);
     res.status(200).json({ message: "got comments for recipe", comments });
     return;
-  }
+  },
 );
 
 /**
@@ -151,5 +151,5 @@ export const getCommentReplies = asyncHandler(
     }
 
     res.status(404).json({ message: "No replies to this comment" });
-  }
+  },
 );

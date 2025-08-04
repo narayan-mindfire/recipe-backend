@@ -13,7 +13,7 @@ import { AuthRequest } from "../types/types";
 export const getMyRating = asyncHandler(async (req: Request, res: Response) => {
   const myRating = await ratingService.getRating(
     req.params.id,
-    (req as AuthRequest).user.id
+    (req as AuthRequest).user.id,
   );
   if (!myRating) {
     res.status(404).json({ message: "could not find rating" });
@@ -40,7 +40,7 @@ export const createRating = asyncHandler(
       res.status(500).json({ message: "could not create rating" });
     }
     res.status(201).json({ rating });
-  }
+  },
 );
 
 /**
@@ -70,5 +70,5 @@ export const deleteRating = asyncHandler(
     }
     await ratingService.deleteRating(id);
     res.status(203).end();
-  }
+  },
 );

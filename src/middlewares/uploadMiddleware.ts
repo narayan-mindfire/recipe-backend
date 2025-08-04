@@ -5,6 +5,10 @@ import fs from "fs";
 const uploadsDir = path.join(__dirname, "../../uploads");
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir);
 
+/**
+ * @desc Multer storage configuration for handling file uploads.
+ *       Files are stored in the /uploads directory with a unique filename.
+ */
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadsDir);
