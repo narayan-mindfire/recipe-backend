@@ -40,14 +40,14 @@ class RecipeService {
     limit: number,
     skip: number,
     sortBy: string,
-    order: 1 | -1
+    order: 1 | -1,
   ) {
     return await recipeRepository.findWithFilters(
       filters,
       limit,
       skip,
       sortBy,
-      order
+      order,
     );
   }
 

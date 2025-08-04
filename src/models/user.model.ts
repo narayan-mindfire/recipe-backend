@@ -1,6 +1,9 @@
 import { Schema, model } from "mongoose";
 import { User } from "../zod/schemas";
 
+/**
+ * Mongoose schema for users.
+ */
 const userSchema = new Schema<User>(
   {
     fname: { type: String },
@@ -10,7 +13,7 @@ const userSchema = new Schema<User>(
     bio: String,
     profileImage: String,
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export const UserModel = model<User>("User", userSchema);

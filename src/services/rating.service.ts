@@ -61,7 +61,7 @@ class RatingService {
     // Adjust averageRating if rating value changed
     if (payload.rating !== undefined && payload.rating !== oldRating.rating) {
       const recipe = await recipeRepository.findById(
-        oldRating.recipeId.toString()
+        oldRating.recipeId.toString(),
       );
       if (!recipe) throw new Error("Recipe not found");
 

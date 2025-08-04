@@ -113,7 +113,7 @@ class AuthService {
         "..",
         "..",
         "uploads",
-        user.profileImage
+        user.profileImage,
       );
       if (fs.existsSync(imagePath)) {
         fs.unlinkSync(imagePath);
