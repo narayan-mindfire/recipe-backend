@@ -28,6 +28,7 @@ app.use(
       process.env.LOCAL_CLIENT_URL!,
       process.env.REACT_CLIENT_URL!,
       "http://localhost:3000",
+      "https://recipe-frontend-lime.vercel.app",
     ],
     credentials: true,
   }),
