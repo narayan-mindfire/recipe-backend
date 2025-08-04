@@ -22,7 +22,7 @@ export interface RecipeQuery {
  */
 export const getRecipes = async (
   req: Request<unknown, unknown, unknown, RecipeQuery>,
-  res: Response
+  res: Response,
 ) => {
   const {
     ingredients,
@@ -61,7 +61,7 @@ export const getRecipes = async (
     parsedLimit,
     skip,
     sortBy,
-    parsedOrder
+    parsedOrder,
   );
 
   res.json({ success: true, recipes });
@@ -87,7 +87,7 @@ export const getRecipeById = asyncHandler(
       res.status(404).json({ message: "didn't find the recipe" });
       return;
     }
-  }
+  },
 );
 
 /**
@@ -128,7 +128,7 @@ export const createRecipe = asyncHandler(
     const recipe = await recipeService.createNewRecipe(validatedData);
 
     res.status(201).json({ recipe });
-  }
+  },
 );
 
 /**
@@ -191,7 +191,7 @@ export const deleteRecipe = asyncHandler(
     }
     await recipeService.removeRecipe(req.params.id);
     res.status(204).end();
-  }
+  },
 );
 
 /**
@@ -204,5 +204,5 @@ export const getMyRecipes = asyncHandler(
     const userId = (req as AuthRequest).user.id;
     const myRecipies = await recipeService.getMyRecipes(userId);
     res.status(200).json({ myRecipies });
-  }
+  },
 );
