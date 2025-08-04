@@ -13,7 +13,7 @@ const userSchema = new Schema<User>(
     bio: String,
     profileImage: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const UserModel = model<User>("User", userSchema);

@@ -17,17 +17,17 @@ const commentSchema = new Schema<Comment>(
     comment: { type: String, required: true },
     hasChildren: { type: Boolean, default: false },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 commentSchema.index(
   { userId: 1, recipeId: 1 },
-  { unique: true, partialFilterExpression: { parentCommentId: null } }
+  { unique: true, partialFilterExpression: { parentCommentId: null } },
 );
 
 commentSchema.index(
   { parentCommentId: 1, userId: 1, comment: 1 },
-  { unique: true }
+  { unique: true },
 );
 
 export const CommentModel = model<Comment>("Comment", commentSchema);
