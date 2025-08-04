@@ -1,6 +1,9 @@
 import { Schema, model } from "mongoose";
 import { Rating } from "../zod/schemas";
 
+/**
+ * Mongoose schema for storing ratings on recipes.
+ */
 const ratingSchema = new Schema<Rating>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },

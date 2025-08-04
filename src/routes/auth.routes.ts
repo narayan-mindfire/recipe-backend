@@ -9,6 +9,7 @@ import {
   deleteMe,
   editMe,
 } from "../controllers/auth.controller";
+import { upload } from "../middlewares/uploadMiddleware";
 
 const authRouter = express.Router();
 
@@ -25,11 +26,11 @@ const authRouter = express.Router();
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
- *     description: Registers a new user with required fields. Password is securely hashed before saving.
+ *     description: Registers a new user. Accepts multipart/form-data for profile image upload.
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -46,14 +47,20 @@ const authRouter = express.Router();
  *                 example: Doe
  *               email:
  *                 type: string
+ *                 format: email
  *                 example: john@example.com
  *               password:
  *                 type: string
  *                 example: MyPassword123
+ *               confirmPassword:
+ *                 type: string
+ *                 example: MyPassword123
  *               bio:
  *                 type: string
+ *                 example: I'm a passionate home cook.
  *               profileImage:
  *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: User successfully registered
@@ -156,24 +163,28 @@ const authRouter = express.Router();
  *   put:
  *     summary: Update the current user's profile
  *     tags: [Auth]
- *     description: Updates user fields (except password)
+ *     description: Updates user fields including profile image. Accepts multipart/form-data.
  *     security:
  *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               fname:
  *                 type: string
+ *                 example: Jane
  *               lname:
  *                 type: string
+ *                 example: Smith
  *               bio:
  *                 type: string
+ *                 example: Updated bio content
  *               profileImage:
  *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: User updated
@@ -181,7 +192,7 @@ const authRouter = express.Router();
  *         description: Validation or update failure
  */
 
-authRouter.post("/register", registerUser);
+authRouter.post("/register", upload.single("profileImage"), registerUser);
 
 authRouter.post("/login", loginUser);
 
@@ -193,5 +204,5 @@ authRouter.get("/me", protect, getMe);
 
 authRouter.delete("/me", protect, deleteMe);
 
-authRouter.put("/me", protect, editMe);
+authRouter.put("/me", upload.single("profileImage"), protect, editMe);
 export default authRouter;

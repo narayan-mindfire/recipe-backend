@@ -5,8 +5,10 @@ import {
   editRecipe,
   getRecipeById,
   getRecipes,
+  getMyRecipes,
 } from "../controllers/recipe.controller";
 import { protect } from "../middlewares/authMiddleware";
+import { upload } from "../middlewares/uploadMiddleware";
 
 const recipeRoutes = express.Router();
 
@@ -14,7 +16,7 @@ const recipeRoutes = express.Router();
  * @swagger
  * tags:
  *   name: Recipes
- *   description: Recipe routes read is for all users, write for authenticated users only
+ *   description: Recipe routes. Read is for all users, write requires authentication.
  */
 
 /**
@@ -68,6 +70,22 @@ recipeRoutes.get("/", getRecipes);
 
 /**
  * @swagger
+ * /recipes/me:
+ *   get:
+ *     summary: Get all recipes created by the currently logged-in user
+ *     tags: [Recipes]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: List of user-authored recipes
+ *       401:
+ *         description: Unauthorized
+ */
+recipeRoutes.get("/me", protect, getMyRecipes);
+
+/**
+ * @swagger
  * /recipes/{id}:
  *   get:
  *     summary: Get a specific recipe by ID
@@ -98,7 +116,7 @@ recipeRoutes.get("/:id", getRecipeById);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             required:
@@ -109,10 +127,10 @@ recipeRoutes.get("/:id", getRecipeById);
  *             properties:
  *               title:
  *                 type: string
- *                 example: "Spaghetti Bolognese"
+ *                 example: Spaghetti Bolognese
  *               description:
  *                 type: string
- *                 example: "A rich and meaty Italian pasta dish."
+ *                 example: A rich and meaty Italian pasta dish.
  *               preparationTime:
  *                 type: integer
  *                 example: 45
@@ -124,15 +142,15 @@ recipeRoutes.get("/:id", getRecipeById);
  *                 type: array
  *                 items:
  *                   type: string
- *                 example: ["pasta", "tomato", "meat"]
+ *                 example: [pasta, tomato, meat]
  *               steps:
  *                 type: array
  *                 items:
  *                   type: string
- *                 example: ["Boil pasta", "Cook sauce", "Mix together"]
+ *                 example: [Boil pasta, Cook sauce, Mix together]
  *               recipeImage:
  *                 type: string
- *                 example: "https://example.com/image.jpg"
+ *                 format: binary
  *     responses:
  *       201:
  *         description: Recipe created successfully
@@ -141,7 +159,7 @@ recipeRoutes.get("/:id", getRecipeById);
  *       401:
  *         description: Unauthorized
  */
-recipeRoutes.post("/", protect, createRecipe);
+recipeRoutes.post("/", protect, upload.single("recipeImage"), createRecipe);
 
 /**
  * @swagger
@@ -161,7 +179,7 @@ recipeRoutes.post("/", protect, createRecipe);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -184,6 +202,7 @@ recipeRoutes.post("/", protect, createRecipe);
  *                   type: string
  *               recipeImage:
  *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Recipe updated successfully
@@ -194,7 +213,7 @@ recipeRoutes.post("/", protect, createRecipe);
  *       404:
  *         description: Recipe not found
  */
-recipeRoutes.put("/:id", protect, editRecipe);
+recipeRoutes.put("/:id", upload.single("recipeImage"), protect, editRecipe);
 
 /**
  * @swagger

@@ -7,6 +7,7 @@ export interface AuthRequest extends Request {
 
 export type RecipeFilters = {
   ingredients?: { $all: string[] };
-  rating?: { $gte?: number };
+  $and?: Array<{ ingredients: { $elemMatch: { $regex: RegExp } } }>;
+  averageRating?: { $gte?: number };
   preparationTime?: { $lte?: number };
 };

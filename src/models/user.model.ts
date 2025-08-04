@@ -1,6 +1,9 @@
 import { Schema, model } from "mongoose";
 import { User } from "../zod/schemas";
 
+/**
+ * Mongoose schema for users.
+ */
 const userSchema = new Schema<User>(
   {
     fname: { type: String },

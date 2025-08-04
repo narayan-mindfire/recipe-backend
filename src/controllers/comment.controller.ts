@@ -5,6 +5,11 @@ import { AuthRequest } from "../types/types";
 import { commentSchemaZ } from "../zod/schemas";
 import { Types } from "mongoose";
 
+/**
+ * @desc    Create a new comment on a recipe or reply to a comment
+ * @route   POST /api/comments
+ * @access  Private
+ */
 export const createComment = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = new Types.ObjectId((req as AuthRequest).user.id);
@@ -41,6 +46,11 @@ export const createComment = asyncHandler(
   },
 );
 
+/**
+ * @desc    Edit a comment (only by the owner)
+ * @route   PUT /api/comments/:id
+ * @access  Private
+ */
 export const editComment = asyncHandler(async (req: Request, res: Response) => {
   const id = req.params.id;
   const userId = (req as AuthRequest).user.id;
@@ -72,6 +82,11 @@ export const editComment = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+/**
+ * @desc    Delete a comment (only by the owner)
+ * @route   DELETE /api/comments/:id
+ * @access  Private
+ */
 export const deleteComment = asyncHandler(
   async (req: Request, res: Response) => {
     const id = req.params.id;
@@ -96,6 +111,11 @@ export const deleteComment = asyncHandler(
   },
 );
 
+/**
+ * @desc    Get all top-level comments for a recipe
+ * @route   GET /api/comments/:recipeId
+ * @access  Public
+ */
 export const getRecipeComments = asyncHandler(
   async (req: Request, res: Response) => {
     const recipeId = req.params.recipeId;
@@ -105,6 +125,11 @@ export const getRecipeComments = asyncHandler(
   },
 );
 
+/**
+ * @desc    Get replies to a specific comment (if it has children)
+ * @route   GET /api/comments/replies/:id
+ * @access  Public
+ */
 export const getCommentReplies = asyncHandler(
   async (req: Request, res: Response) => {
     const commentId = req.params.id;

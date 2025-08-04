@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/db";
@@ -9,12 +9,13 @@ import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 import errorHandler from "./middlewares/errorHandler";
+import path from "path";
 
 const port = process.env.PORT;
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 100,
+  max: 1000,
   message: "Too many requests from this IP, please try again later.",
 });
 
@@ -23,7 +24,11 @@ const app: Express = express();
 
 app.use(
   cors({
-    origin: [process.env.LOCAL_CLIENT_URL!],
+    origin: [
+      process.env.LOCAL_CLIENT_URL!,
+      process.env.REACT_CLIENT_URL!,
+      "http://localhost:3000",
+    ],
     credentials: true,
   }),
 );
@@ -36,6 +41,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/api/v1", router);
+
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use(errorHandler);
 
@@ -50,6 +57,4 @@ app.listen(port, () => {
   // console.log(`Swagger docs at http://localhost:${port}/api-docs`);
 });
 
-app.use("/", (req: Request, res: Response) => {
-  res.send("route working");
-});
+export default app;
