@@ -9,12 +9,33 @@ import {
 import path from "path";
 import fs from "fs";
 
+/**
+ * @class AuthService
+ * @description Service responsible for handling authentication logic:
+ * registration, login, token generation/validation, and user management.
+ */
 class AuthService {
+  /**
+   * @private
+   * @function checkUserPresence
+   * @description Verifies if a user exists by ID.
+   * @param userId - The ID of the user to check.
+   * @throws Error if user is not found.
+   * @returns The user object.
+   */
   private async checkUserPresence(userId: string) {
     const user = await authRepository.findById(userId);
     if (!user) throw new Error("User not found");
     return user;
   }
+
+  /**
+   * @function register
+   * @description Registers a new user with hashed password and returns tokens.
+   * @param data - New user data (excluding createdAt and updatedAt).
+   * @throws Error if email already exists.
+   * @returns The created user and generated tokens.
+   */
   async register(data: Omit<User, "createdAt" | "updatedAt">) {
     const existing = await authRepository.findByEmail(data.email);
     if (existing) throw new Error("Email already in use");
@@ -31,6 +52,14 @@ class AuthService {
     return { user, accessToken, refreshToken };
   }
 
+  /**
+   * @function login
+   * @description Authenticates user and returns tokens.
+   * @param email - User's email.
+   * @param password - User's password.
+   * @throws Error if credentials are invalid.
+   * @returns The authenticated user and generated tokens.
+   */
   async login(email: string, password: string) {
     const user = await authRepository.findByEmail(email);
     if (!user) throw new Error("Invalid credentials");
@@ -44,6 +73,13 @@ class AuthService {
     return { user, accessToken, refreshToken };
   }
 
+  /**
+   * @function refresh
+   * @description Refreshes and returns a new access token.
+   * @param token - The refresh token to validate.
+   * @throws Error if the token is invalid or expired.
+   * @returns A new access token.
+   */
   async refresh(token: string) {
     const userId = verifyRefreshToken(token);
     if (!userId) throw new Error("Invalid or expired refresh token");
@@ -52,11 +88,23 @@ class AuthService {
     return { accessToken };
   }
 
+  /**
+   * @function me
+   * @description Returns the authenticated user's details (without password).
+   * @param userId - The ID of the authenticated user.
+   * @returns The user object without password.
+   */
   async me(userId: string) {
     const user = await this.checkUserPresence(userId);
     const { password: _password, ...rest } = user.toObject();
     return rest;
   }
+
+  /**
+   * @function deleteMe
+   * @description Deletes the current user's account and profile image.
+   * @param userId - The ID of the user to delete.
+   */
   async deleteMe(userId: string) {
     const user = await this.checkUserPresence(userId);
     if (user.profileImage && typeof user.profileImage === "string") {
@@ -74,6 +122,14 @@ class AuthService {
     await authRepository.deleteMe(userId);
   }
 
+  /**
+   * @function editMe
+   * @description Updates the current user's profile information.
+   * @param userId - The ID of the user.
+   * @param newUser - Partial user data to update.
+   * @throws Error if update fails.
+   * @returns Updated user object without password.
+   */
   async editMe(userId: string, newUser: Partial<User>) {
     await this.checkUserPresence(userId);
     const updatedUser = await authRepository.editMe(userId, newUser);

@@ -3,6 +3,11 @@ import { authService } from "../services/auth.service";
 import { userSchemaZ } from "../zod/schemas";
 import { AuthRequest } from "../types/types";
 
+/**
+ * @desc    Register a new user
+ * @route   POST /api/auth/register
+ * @access  Public
+ */
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const body = req.body;
@@ -25,6 +30,11 @@ export const registerUser = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @desc    Login a user
+ * @route   POST /api/auth/login
+ * @access  Public
+ */
 export const loginUser = async (req: Request, res: Response) => {
   try {
     const { user, accessToken, refreshToken } = await authService.login(
@@ -45,6 +55,11 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @desc    Refresh access token using refresh token
+ * @route   GET /api/auth/refresh
+ * @access  Public (with cookie)
+ */
 export const refreshToken = async (req: Request, res: Response) => {
   try {
     const token = req.cookies.refreshToken;
@@ -65,12 +80,22 @@ export const refreshToken = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @desc    Logout the current user
+ * @route   POST /api/auth/logout
+ * @access  Public
+ */
 export const logoutUser = async (_req: Request, res: Response) => {
   res.clearCookie("refreshToken");
   res.clearCookie("accessToken");
   res.status(200).json({ message: "Logged out successfully" });
 };
 
+/**
+ * @desc    Get current authenticated user details
+ * @route   GET /api/auth/me
+ * @access  Private
+ */
 export const getMe = async (req: Request, res: Response) => {
   try {
     const user = await authService.me((req as AuthRequest).user.id);
@@ -84,6 +109,11 @@ export const getMe = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @desc    Delete current user account
+ * @route   DELETE /api/auth/me
+ * @access  Private
+ */
 export const deleteMe = async (req: Request, res: Response) => {
   try {
     await authService.deleteMe((req as AuthRequest).user.id);
@@ -97,6 +127,11 @@ export const deleteMe = async (req: Request, res: Response) => {
   }
 };
 
+/**
+ * @desc    Edit profile of the current user
+ * @route   PUT /api/auth/me
+ * @access  Private
+ */
 export const editMe = async (req: Request, res: Response) => {
   try {
     const updateUserSchema = userSchemaZ.partial().omit({ password: true });

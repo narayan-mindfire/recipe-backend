@@ -2,6 +2,18 @@ import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 import mongoose from "mongoose";
 
+/**
+ * @desc    Centralized error-handling middleware for Express.
+ *          Handles Mongoose CastErrors, Zod validation errors,
+ *          and MongoDB duplicate key errors.
+ *
+ * @param   err - The error object thrown in any middleware/controller
+ * @param   _req - The incoming Express request object (unused)
+ * @param   res - The outgoing Express response object
+ * @param   _next - The next middleware function (unused but required)
+ *
+ * @returns Sends a JSON response with appropriate status code and message.
+ */
 const errorHandler = (
   err: Error,
   _req: Request,

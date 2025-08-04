@@ -5,18 +5,28 @@ import { ratingSchemaZ } from "../zod/schemas";
 import mongoose from "mongoose";
 import { AuthRequest } from "../types/types";
 
+/**
+ * @desc    Get current user's rating for a specific recipe
+ * @route   GET /api/ratings/:id
+ * @access  Private
+ */
 export const getMyRating = asyncHandler(async (req: Request, res: Response) => {
   const myRating = await ratingService.getRating(
     req.params.id,
     (req as AuthRequest).user.id,
   );
   if (!myRating) {
-    res.status(404).json({ message: "could not find rating" });
+    res.status(200).json({ message: "no ratings yet" });
     return;
   }
   res.status(200).json({ message: "rating found", myRating });
 });
 
+/**
+ * @desc    Create a new rating for a recipe
+ * @route   POST /api/ratings
+ * @access  Private
+ */
 export const createRating = asyncHandler(
   async (req: Request, res: Response) => {
     const payload = {
@@ -33,6 +43,11 @@ export const createRating = asyncHandler(
   },
 );
 
+/**
+ * @desc    Update an existing rating
+ * @route   PUT /api/ratings/:id
+ * @access  Private
+ */
 export const editRating = asyncHandler(async (req: Request, res: Response) => {
   const id = req.params.id;
   const validate = ratingSchemaZ.partial().parse(req.body);
@@ -40,6 +55,11 @@ export const editRating = asyncHandler(async (req: Request, res: Response) => {
   res.status(200).json({ rating });
 });
 
+/**
+ * @desc    Delete a rating by ID
+ * @route   DELETE /api/ratings/:id
+ * @access  Private
+ */
 export const deleteRating = asyncHandler(
   async (req: Request, res: Response) => {
     const id = req.params.id;
