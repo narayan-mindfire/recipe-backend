@@ -28,6 +28,8 @@ app.use(
       process.env.LOCAL_CLIENT_URL!,
       process.env.REACT_CLIENT_URL!,
       "http://localhost:3000",
+      "https://recipe-frontend-olive.vercel.app/",
+      "https://recipe-frontend-olive.vercel.app",
       "https://recipe-frontend-lime.vercel.app",
       "https://recipe-frontend-617soj2bx-narayan-pradhans-projects.vercel.app",
     ],

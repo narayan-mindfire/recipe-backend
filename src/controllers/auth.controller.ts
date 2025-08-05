@@ -22,12 +22,13 @@ export const registerUser = async (req: Request, res: Response) => {
       .status(201)
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
         secure: true,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .json({ user, accessToken });
@@ -53,12 +54,12 @@ export const loginUser = async (req: Request, res: Response) => {
       .status(200)
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .json({ user, accessToken });
@@ -87,7 +88,7 @@ export const refreshToken = async (req: Request, res: Response) => {
       .status(200)
       .cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production" ? true : false,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .end();
