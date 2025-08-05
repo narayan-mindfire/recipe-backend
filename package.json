@@ -9,7 +9,6 @@
     "preserve": "npm run build",
     "serve": "concurrently \"npx tsc -w\" \"nodemon dist/index.js\"",
     "lint": "eslint src --ext .ts",
-    "prepare": "husky",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
     "test": "npx jest"
   },

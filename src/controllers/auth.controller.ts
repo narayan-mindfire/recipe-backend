@@ -20,8 +20,16 @@ export const registerUser = async (req: Request, res: Response) => {
 
     res
       .status(201)
-      .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
-      .cookie("accessToken", accessToken, { httpOnly: true, secure: true })
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      })
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      })
       .json({ user, accessToken });
   } catch (error: unknown) {
     res.status(400).json({
@@ -39,12 +47,20 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const { user, accessToken, refreshToken } = await authService.login(
       req.body.email,
-      req.body.password,
+      req.body.password
     );
     res
       .status(200)
-      .cookie("refreshToken", refreshToken, { httpOnly: true, secure: true })
-      .cookie("accessToken", accessToken, { httpOnly: true, secure: true })
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      })
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      })
       .json({ user, accessToken });
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -69,7 +85,11 @@ export const refreshToken = async (req: Request, res: Response) => {
     const { accessToken } = await authService.refresh(token);
     res
       .status(200)
-      .cookie("accessToken", accessToken, { httpOnly: true, secure: true })
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      })
       .end();
   } catch (error: unknown) {
     if (error instanceof Error) {
@@ -144,7 +164,7 @@ export const editMe = async (req: Request, res: Response) => {
 
     const updatedUser = await authService.editMe(
       (req as AuthRequest).user.id,
-      validatedData,
+      validatedData
     );
 
     res.status(200).json({ user: updatedUser });
