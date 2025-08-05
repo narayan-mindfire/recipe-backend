@@ -23,7 +23,6 @@ export const registerUser = async (req: Request, res: Response) => {
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production" ? true : false,
-        secure: true,
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .cookie("accessToken", accessToken, {
