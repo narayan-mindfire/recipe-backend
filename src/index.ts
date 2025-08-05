@@ -15,7 +15,7 @@ const port = process.env.PORT;
 
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 100,
+  max: 1000,
   message: "Too many requests from this IP, please try again later.",
 });
 
@@ -30,6 +30,8 @@ app.use(
       "http://localhost:3000",
       "https://recipe-frontend-olive.vercel.app/",
       "https://recipe-frontend-olive.vercel.app",
+      "https://recipe-frontend-lime.vercel.app",
+      "https://recipe-frontend-617soj2bx-narayan-pradhans-projects.vercel.app",
     ],
     credentials: true,
   }),

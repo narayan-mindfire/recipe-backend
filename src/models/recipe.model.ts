@@ -1,6 +1,10 @@
 import { Schema, model } from "mongoose";
 import { Recipe } from "../zod/schemas";
 
+/**
+ * Mongoose schema for storing recipes.
+ * Supports nested comments using `parentCommentId`.
+ */
 const recipeSchema = new Schema<Recipe>(
   {
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
