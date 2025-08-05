@@ -4,6 +4,12 @@ import { recipeRepository } from "../repositories/recipe.repository";
 import { Rating } from "../zod/schemas";
 
 class RatingService {
+  /**
+   * Get a user's rating for a recipe.
+   * @param recipeId - ID of the recipe.
+   * @param userId - ID of the user.
+   * @returns The rating if found.
+   */
   async getRating(recipeId: string, userId: string) {
     const rating = await ratingRepository.findAll({
       recipeId: new Types.ObjectId(recipeId),
@@ -13,6 +19,11 @@ class RatingService {
     return rating[0];
   }
 
+  /**
+   * Create a new rating and update the recipe's average rating.
+   * @param payload - Rating payload.
+   * @returns The created rating.
+   */
   async createNewRating(payload: Rating) {
     const rating = await ratingRepository.create(payload);
     if (!rating) throw new Error("Could not create rating");
@@ -34,6 +45,12 @@ class RatingService {
     return rating;
   }
 
+  /**
+   * Update an existing rating and adjust recipe's average rating if needed.
+   * @param id - Rating ID.
+   * @param payload - Partial rating payload.
+   * @returns The updated rating.
+   */
   async updateRating(id: string, payload: Partial<Rating>) {
     const oldRating = await ratingRepository.findById(id);
     if (!oldRating) throw new Error("Old rating not found");
@@ -60,6 +77,10 @@ class RatingService {
     return updatedRating;
   }
 
+  /**
+   * Delete a rating and update the recipe's average rating.
+   * @param id - Rating ID.
+   */
   async deleteRating(id: string) {
     const rating = await ratingRepository.findById(id);
     if (!rating) throw new Error("Rating not found");
@@ -83,6 +104,11 @@ class RatingService {
     await ratingRepository.delete(id);
   }
 
+  /**
+   * Find a rating by its ID.
+   * @param id - Rating ID.
+   * @returns The rating if found.
+   */
   async findRating(id: string) {
     const rating = await ratingRepository.findById(id);
     return rating;

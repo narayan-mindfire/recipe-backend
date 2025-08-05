@@ -37,7 +37,7 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const { user, accessToken, refreshToken } = await authService.login(
       req.body.email,
-      req.body.password
+      req.body.password,
     );
     res
       .status(200)
@@ -129,7 +129,7 @@ export const editMe = async (req: Request, res: Response) => {
 
     const updatedUser = await authService.editMe(
       (req as AuthRequest).user.id,
-      validatedData
+      validatedData,
     );
 
     res.status(200).json({ user: updatedUser });
