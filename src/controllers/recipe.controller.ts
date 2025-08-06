@@ -120,7 +120,7 @@ export const createRecipe = asyncHandler(
       difficulty: req.body.difficulty,
       ingredients,
       steps,
-      recipeImage: req.file?.filename || "",
+      recipeImage: req.file?.path || "",
       userId,
     };
 
@@ -150,7 +150,7 @@ export const editRecipe = asyncHandler(async (req: Request, res: Response) => {
       : req.body.steps
         ? [req.body.steps]
         : undefined,
-    recipeImage: req.file?.filename || undefined,
+    recipeImage: req.file?.path || undefined,
   };
 
   const editRecipeSchema = recipeSchemaZ.partial();
