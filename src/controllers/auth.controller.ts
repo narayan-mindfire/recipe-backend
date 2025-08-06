@@ -11,7 +11,8 @@ import { AuthRequest } from "../types/types";
 export const registerUser = async (req: Request, res: Response) => {
   try {
     const body = req.body;
-    const imagePath = req.file ? `${req.file.filename}` : undefined;
+
+    const imagePath = req.file ? req.file.path : undefined;
 
     const { user, accessToken, refreshToken } = await authService.register({
       ...body,
@@ -22,13 +23,12 @@ export const registerUser = async (req: Request, res: Response) => {
       .status(201)
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ? true : false,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ? true : false,
+        secure: process.env.NODE_ENV === "production",
         sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       })
       .json({ user, accessToken });
@@ -48,7 +48,7 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const { user, accessToken, refreshToken } = await authService.login(
       req.body.email,
-      req.body.password
+      req.body.password,
     );
     res
       .status(200)
@@ -159,13 +159,13 @@ export const editMe = async (req: Request, res: Response) => {
 
     const validatedData = updateUserSchema.parse(req.body);
 
-    if (req.file?.filename) {
-      validatedData.profileImage = req.file.filename;
+    if (req.file?.path) {
+      validatedData.profileImage = req.file.path;
     }
 
     const updatedUser = await authService.editMe(
       (req as AuthRequest).user.id,
-      validatedData
+      validatedData,
     );
 
     res.status(200).json({ user: updatedUser });
